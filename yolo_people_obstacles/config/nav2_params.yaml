@@ -6,39 +6,123 @@ local_costmap:
       global_frame: odom
       robot_base_frame: base_link
       rolling_window: true
-      width: 4
-      height: 4
+      width: 4.0 # 사용자 설정 유지
+      height: 4.0 # 사용자 설정 유지
       resolution: 0.05
       plugins: ["obstacle_layer", "inflation_layer"]
 
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: depth_cloud people_cloud
+        # observation_sources: depth_cloud people_cloud # 원본 유지, 하지만 아래처럼 분리하는 것을 권장
+        observation_sources: scan yolo_people
 
-        depth_cloud:
-          topic: /camera/depth/color/points   # 사용 중인 포인트클라우드 토픽으로 맞추세요
-          data_type: "PointCloud2"
-          expected_update_rate: 5.0
+        scan: # 라이다 센서 추가 (안전을 위해 필수)
+          topic: /scan
+          data_type: "LaserScan"
           marking: True
           clearing: True
-          min_obstacle_height: 0.05
-          max_obstacle_height: 2.0
-          obstacle_max_range: 3.0
-          raytrace_max_range: 4.0
-          inf_is_valid: False
-
-        people_cloud:
-          topic: /people_obstacles
+        
+        yolo_people: # people_cloud에서 yolo_people로 이름 변경 (런치파일과 일치)
+          topic: /people_obstacles # 사용자 설정 유지
           data_type: "PointCloud2"
-          expected_update_rate: 10.0
-          observation_persistence: 0.5   # YOLO 드랍 보정
           marking: True
-          clearing: False
-          min_obstacle_height: 0.05
-          max_obstacle_height: 2.2
+          clearing: False # 사람은 스스로 사라지지 않음
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        inflation_radius: 0.6
-        cost_scaling_factor: 5.0
+        inflation_radius: 0.6 # 사용자 설정 유지
+        cost_scaling_factor: 5.0 # 사용자 설정 유지
+
+controller_server:
+  ros__parameters:
+    use_sim_time: False
+    controller_frequency: 20.0
+    min_x_velocity: 0.0
+    min_y_velocity: 0.0
+    min_theta_velocity: 0.0
+    max_x_velocity: 0.26
+    max_y_velocity: 0.0
+    max_theta_velocity: 1.82
+    failure_tolerance: 0.3
+    progress_checker_plugin: "progress_checker"
+    goal_checker_plugins: ["goal_checker"]
+    controller_plugins: ["FollowPath"]
+
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+      critics:
+        - name: "RotateToGoal"
+          plugin: "dwb_critics::RotateToGoalCritic"
+        - name: "Oscillation"
+          plugin: "dwb_critics::OscillationCritic"
+        - name: "BaseObstacle"
+          plugin: "dwb_critics::BaseObstacleCritic"
+        - name: "GoalAlign"
+          plugin: "dwb_critics::GoalAlignCritic"
+        - name: "PathAlign"
+          plugin: "dwb_critics::PathAlignCritic"
+        - name: "PathDist"
+          plugin: "dwb_critics::PathDistCritic"
+        - name: "GoalDist"
+          plugin: "dwb_critics::GoalDistCritic"
+
+planner_server:
+  ros__parameters:
+    use_sim_time: False
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner/NavFnPlanner"
+      tolerance: 0.5
+      use_astar: false
+
+behavior_server:
+  ros__parameters:
+    use_sim_time: False
+    behavior_plugins: ["spin", "backup", "drive_on_heading", "wait"]
+    spin:
+      plugin: "nav2_behaviors/Spin"
+    backup:
+      plugin: "nav2_behaviors/BackUp"
+    drive_on_heading:
+      plugin: "nav2_behaviors/DriveOnHeading"
+    wait:
+      plugin: "nav2_behaviors/Wait"
+
+bt_navigator:
+  ros__parameters:
+    use_sim_time: False
+    global_frame: map
+    robot_base_frame: base_link
+    odom_topic: /odom
+    bt_xml_filename: "navigate_w_replanning_and_recovery.xml"
+    default_server_timeout: 20.0
+    plugin_lib_names:
+      - nav2_compute_path_to_pose_action_bt_node
+      - nav2_compute_path_through_poses_action_bt_node
+      - nav2_follow_path_action_bt_node
+      - nav2_back_up_action_bt_node
+      - nav2_spin_action_bt_node
+      - nav2_wait_action_bt_node
+      - nav2_clear_costmap_service_bt_node
+      - nav2_is_stuck_condition_bt_node
+      - nav2_goal_reached_condition_bt_node
+      - nav2_goal_updated_condition_bt_node
+      - nav2_globally_updated_goal_condition_bt_node
+      - nav2_is_path_valid_condition_bt_node
+      - nav2_initial_pose_received_condition_bt_node
+      - nav2_reinitialize_global_localization_service_bt_node
+      - nav2_rate_controller_bt_node
+      - nav2_distance_controller_bt_node
+      - nav2_speed_controller_bt_node
+      - nav2_truncate_path_action_bt_node
+      - nav2_goal_updater_node_bt_node
+      - nav2_recovery_node_bt_node
+      - nav2_pipeline_sequence_bt_node
+      - nav2_round_robin_node_bt_node
+      - nav2_transform_available_condition_bt_node
+      - nav2_time_expired_condition_bt_node
+      - nav2_distance_traveled_condition_bt_node
+      - nav2_single_trigger_bt_node
+      - nav2_is_battery_low_condition_bt_node
+      - nav2_navigate_gen_path_to_pose_action_bt_node
