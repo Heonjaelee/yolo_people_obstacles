@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+    <name>yolo_people_obstacles</name>
+    <version>0.1.0</version>
+    <description>YOLOv11 human detection → PointCloud2 for Nav2 obstacle_layer</description>
+    <maintainer email="you@example.com">Your Name</maintainer>
+    <license>Apache-2.0</license>
+
+    <buildtool_depend>ament_python</buildtool_depend>
+
+    <!-- ROS 런타임 의존성 -->
+    <exec_depend>rclpy</exec_depend>
+    <exec_depend>sensor_msgs</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    <exec_depend>message_filters</exec_depend>
+    <exec_depend>sensor_msgs_py</exec_depend>
+    <exec_depend>cv_bridge</exec_depend>
+
+    <!-- pip 패키지는 별도 설치(ultralytics, numpy 등) -->
+
+    <export>
+        <build_type>ament_python</build_type>
+    </export>
+</package>
