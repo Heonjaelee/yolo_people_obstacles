@@ -4,7 +4,6 @@
     <name>yolo_people_obstacles</name>
     <version>0.1.0</version>
     <description>YOLOv11 human detection → PointCloud2 for Nav2 obstacle_layer</description>
-    
     <maintainer email="csilab@example.com">csilab</maintainer>
     <license>Apache-2.0</license>
 
@@ -20,7 +19,7 @@
 
     <test_depend>ament_copyright</test_depend>
     <test_depend>ament_flake8</test_depend>
-    <test_depend>ament_pep257</test_depend>
+    <test_depend>ament_pep27</test_depend>
     <test_depend>python3-pytest</test_depend>
 
     <export>
