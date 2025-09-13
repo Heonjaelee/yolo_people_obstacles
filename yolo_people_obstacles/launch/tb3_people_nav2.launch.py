@@ -19,11 +19,11 @@ def generate_launch_description():
         'tb3_model', default_value='waffle',
         description='TurtleBot3 model: burger | waffle | waffle_pi'
     )
-    use_sim_time = DeclareLaunchArgument('use_sim_time', default_value='false')
-    start_tb3 = DeclareLaunchArgument('start_tb3', default_value='true',
+    use_sim_time = DeclareLaunchArgument('use_sim_time', default_value='False')
+    start_tb3 = DeclareLaunchArgument('start_tb3', default_value='True',
                                     description='Start turtlebot3_bringup/robot.launch.py')
-    start_realsense = DeclareLaunchArgument('start_realsense', default_value='true')
-    use_slam = DeclareLaunchArgument('use_slam', default_value='true',
+    start_realsense = DeclareLaunchArgument('start_realsense', default_value='True')
+    use_slam = DeclareLaunchArgument('use_slam', default_value='True',
                                     description='Use slam_toolbox via Nav2 bringup')
     map_yaml = DeclareLaunchArgument('map', default_value='',
                                     description='Map yaml path (set when use_slam=false)')
@@ -39,7 +39,7 @@ def generate_launch_description():
     model_path = DeclareLaunchArgument('model_path', default_value='/path/to/yolo11n-seg.engine')
     yolo_conf = DeclareLaunchArgument('yolo_conf', default_value='0.5')
     yolo_stride = DeclareLaunchArgument('yolo_stride', default_value='4')
-    yolo_use_seg = DeclareLaunchArgument('yolo_use_seg', default_value='true')
+    yolo_use_seg = DeclareLaunchArgument('yolo_use_seg', default_value='True')
     max_depth_m = DeclareLaunchArgument('max_depth_m', default_value='5.0')
     min_depth_m = DeclareLaunchArgument('min_depth_m', default_value='0.3')
 
