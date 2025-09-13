@@ -82,8 +82,8 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(pkg_realsense, 'launch', 'rs_launch.py')),
         condition=IfCondition(LaunchConfiguration('start_realsense')),
         launch_arguments={
-            'align_depth': 'true',
-            'pointcloud.enable': 'true',
+            'align_depth': 'True',
+            'pointcloud.enable': 'True',
             # 필요시 fps/해상도 조절:
             # 'color_width': '640', 'color_height': '480', 'color_fps': '30',
             # 'depth_width': '640', 'depth_height': '480', 'depth_fps': '30'
