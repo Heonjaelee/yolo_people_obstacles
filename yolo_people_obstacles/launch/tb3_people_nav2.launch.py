@@ -36,7 +36,7 @@ def generate_launch_description():
         description='Nav2 parameter file with obstacle_layer.people_cloud configured'
     )
     # YOLO node params
-    model_path = DeclareLaunchArgument('model_path', default_value='/path/to/yolo11n-seg.engine')
+    model_path = DeclareLaunchArgument('model_path', default_value='yolo11n-seg.engine')
     yolo_conf = DeclareLaunchArgument('yolo_conf', default_value='0.5')
     yolo_stride = DeclareLaunchArgument('yolo_stride', default_value='4')
     yolo_use_seg = DeclareLaunchArgument('yolo_use_seg', default_value='True')
